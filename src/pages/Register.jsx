@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -8,15 +8,23 @@ function Register() {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [errorMensaje, setErrorMensaje] = useState('');
-    const [exitoMensaje, setExitoMensaje] = useState('');
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const checkUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                navigate('/dashboard');
+            }
+        };
+        checkUser();
+    }, [navigate]);
 
     const handleRegister = async (e) => {
         e.preventDefault();
         setLoading(true);
         setErrorMensaje('');
-        setExitoMensaje('');
 
         const { data, error } = await supabase.auth.signUp({
             email: email,
@@ -30,11 +38,10 @@ function Register() {
 
         if (error) {
             setErrorMensaje(error.message);
+            setLoading(false);
         } else {
-            setExitoMensaje('¡Registro exitoso! Ahora puedes iniciar sesión.');
+            navigate('/', { state: { message: '¡Registro exitoso! Ahora puedes iniciar sesión con tu nueva cuenta.' } });
         }
-
-        setLoading(false);
     };
 
     return (
@@ -80,7 +87,6 @@ function Register() {
                 </div>
 
                 {errorMensaje && <p style={{ color: 'red' }}>{errorMensaje}</p>}
-                {exitoMensaje && <p style={{ color: 'green' }}>{exitoMensaje}</p>}
 
                 <button type="submit" disabled={loading} className="primary">
                     {loading ? 'Cargando...' : 'Registrarse'}

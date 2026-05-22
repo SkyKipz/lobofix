@@ -7,6 +7,7 @@ function ReportModal({ reporte, perfil, onClose, onUpdate }) {
     const [estado, setEstado] = useState(reporte.estado);
     const [nuevaNota, setNuevaNota] = useState('');
     const [guardando, setGuardando] = useState(false);
+    const [fotoAmpliada, setFotoAmpliada] = useState(null);
 
     useEffect(() => {
         cargarDetalles();
@@ -85,7 +86,14 @@ function ReportModal({ reporte, perfil, onClose, onUpdate }) {
                     {fotos.length > 0 && (
                         <div className="fotos-grid">
                             {fotos.map(foto => (
-                                <img key={foto.id_foto} src={foto.url_foto} alt="Reporte" className="foto-reporte" />
+                                <img 
+                                    key={foto.id_foto} 
+                                    src={foto.url_foto} 
+                                    alt="Reporte" 
+                                    className="foto-reporte" 
+                                    onClick={() => setFotoAmpliada(foto.url_foto)}
+                                    style={{ cursor: 'pointer' }}
+                                />
                             ))}
                         </div>
                     )}
@@ -134,6 +142,21 @@ function ReportModal({ reporte, perfil, onClose, onUpdate }) {
                     )}
                 </div>
             </div>
+
+            {/* Modal para foto ampliada */}
+            {fotoAmpliada && (
+                <div className="modal-overlay" onClick={() => setFotoAmpliada(null)} style={{ zIndex: 1100, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <div style={{ position: 'relative', maxWidth: '90%', maxHeight: '90%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <button onClick={() => setFotoAmpliada(null)} style={{ position: 'absolute', top: '-15px', right: '-15px', background: 'var(--accent-color, #e74c3c)', color: 'white', border: 'none', borderRadius: '50%', width: '35px', height: '35px', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', boxShadow: '0 2px 5px rgba(0,0,0,0.3)', zIndex: 1101 }}>
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                        <img src={fotoAmpliada} alt="Reporte Ampliado" style={{ maxWidth: '100%', maxHeight: '85vh', objectFit: 'contain', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.5)', background: '#000' }} onClick={e => e.stopPropagation()} />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -10,6 +10,18 @@ function Login() {
 
     // Hook para redireccionar a otra página después de entrar
     const navigate = useNavigate();
+    const location = useLocation();
+    const exitoMensaje = location.state?.message;
+
+    useEffect(() => {
+        const checkUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                navigate('/dashboard');
+            }
+        };
+        checkUser();
+    }, [navigate]);
 
     const handleLogin = async (e) => {
         e.preventDefault(); // Evita que la página se recargue
@@ -36,6 +48,12 @@ function Login() {
         <div className="login-container">
             <h1>Bienvenido a LoboFix</h1>
             <p>Inicia sesión para reportar un desperfecto</p>
+
+            {exitoMensaje && (
+                <div style={{ color: '#155724', backgroundColor: '#d4edda', padding: '10px', borderRadius: '5px', marginBottom: '15px', border: '1px solid #c3e6cb', textAlign: 'center' }}>
+                    {exitoMensaje}
+                </div>
+            )}
 
             <form onSubmit={handleLogin} className="login-form">
                 <div>
