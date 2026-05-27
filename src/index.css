@@ -4,10 +4,13 @@
 
 :root {
   /* Institutional Palette */
-  --color-primary: #002D4C;    /* Deep Sea Navy */
-  --color-secondary: #00B4E1;  /* Sky Blue */
-  --color-accent: #FFB81C;     /* Lobo Gold */
-  
+  --color-primary: #002D4C;
+  /* Deep Sea Navy */
+  --color-secondary: #00B4E1;
+  /* Sky Blue */
+  --color-accent: #FFB81C;
+  /* Lobo Gold */
+
   /* Neutrals */
   --color-bg: #F4F7F6;
   --color-text: #333333;
@@ -25,7 +28,7 @@
   --spacing-sm: 10px;
   --spacing-md: 20px;
   --spacing-lg: 30px;
-  
+
   /* Transitions */
   --transition-standard: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --shadow-lift: 0 4px 15px rgba(0, 0, 0, 0.05);
@@ -38,7 +41,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 body {
@@ -48,7 +51,9 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   color: var(--color-primary);
   font-weight: 700;
   line-height: 1.2;
@@ -214,7 +219,140 @@ textarea:focus {
   color: var(--color-primary);
 }
 
-/* =/* ==========================================
+.filters-section {
+  margin-bottom: 30px;
+}
+
+.filters-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-secondary);
+  letter-spacing: 0.1em;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.filters-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 15px;
+  background-color: var(--color-card-bg);
+  padding: 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-group.flex-2 {
+  flex: 2;
+}
+
+.filter-group.flex-1 {
+  flex: 1;
+}
+
+.filter-label {
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input-wrapper .input-prefix {
+  position: absolute;
+  left: 14px;
+  color: var(--color-secondary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.25rem;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.input-wrapper input {
+  padding-left: 32px;
+  margin-bottom: 0;
+  width: 100%;
+}
+
+.filters-bar select {
+  margin-bottom: 0;
+  width: 100%;
+}
+
+.btn-clear {
+  height: 46px;
+  padding: 0 20px;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  border: 1px solid var(--color-border);
+  background-color: transparent;
+  color: var(--color-primary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition-standard);
+}
+
+.btn-clear:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-bg);
+}
+
+/* Empty State Styling */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background-color: var(--color-card-bg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  text-align: center;
+}
+
+.empty-message {
+  color: #666;
+  font-size: 1rem;
+  margin-bottom: 20px;
+  max-width: 50ch;
+}
+
+.btn-clear-empty {
+  padding: 10px 20px;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  border: 1px solid var(--color-border);
+  background-color: transparent;
+  color: var(--color-primary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition-standard);
+}
+
+.btn-clear-empty:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-bg);
+}
+
+/* ==========================================
    COMPONENTS: CARDS & REPORTS
    ========================================== */
 .report-grid {
@@ -268,17 +406,37 @@ textarea:focus {
 }
 
 /* Status Variations */
-.status-pendiente { border-top-color: var(--status-pending); }
-.status-pendiente .badge { background-color: var(--status-pending); }
+.status-pendiente {
+  border-top-color: var(--status-pending);
+}
 
-.status-en_proceso { border-top-color: var(--status-process); }
-.status-en_proceso .badge { background-color: var(--status-process); }
+.status-pendiente .badge {
+  background-color: var(--status-pending);
+}
 
-.status-resuelto { border-top-color: var(--status-resolved); }
-.status-resuelto .badge { background-color: var(--status-resolved); }
+.status-en_proceso {
+  border-top-color: var(--status-process);
+}
 
-.status-rechazado { border-top-color: var(--status-rejected); }
-.status-rechazado .badge { background-color: var(--status-rejected); }
+.status-en_proceso .badge {
+  background-color: var(--status-process);
+}
+
+.status-resuelto {
+  border-top-color: var(--status-resolved);
+}
+
+.status-resuelto .badge {
+  background-color: var(--status-resolved);
+}
+
+.status-rechazado {
+  border-top-color: var(--status-rejected);
+}
+
+.status-rechazado .badge {
+  background-color: var(--status-rejected);
+}
 
 /* ==========================================
    COMPONENTS: MODAL
@@ -454,5 +612,16 @@ button.secondary:hover {
     flex-direction: column;
     gap: 15px;
     align-items: stretch;
+  }
+
+  .filters-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+
+  .btn-clear {
+    width: 100%;
+    margin-top: 5px;
   }
 }

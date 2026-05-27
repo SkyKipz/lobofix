@@ -11,6 +11,8 @@ function Dashboard() {
     const [loading, setLoading] = useState(true);
     const [mostrarForm, setMostrarForm] = useState(false);
     const [reporteSeleccionado, setReporteSeleccionado] = useState(null);
+    const [busqueda, setBusqueda] = useState('');
+    const [filtroEstado, setFiltroEstado] = useState('todos');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -40,6 +42,15 @@ function Dashboard() {
         navigate('/');
     };
 
+    const reportesFiltrados = reportes.filter(rep => {
+        const coincideBusqueda =
+            rep.titulo.toLowerCase().includes(busqueda.toLowerCase()) ||
+            rep.descripcion.toLowerCase().includes(busqueda.toLowerCase()) ||
+            (rep.ubicaciones?.nombre && rep.ubicaciones.nombre.toLowerCase().includes(busqueda.toLowerCase()));
+        const coincideEstado = filtroEstado === 'todos' || rep.estado === filtroEstado;
+        return coincideBusqueda && coincideEstado;
+    });
+
     if (loading) return <p>Cargando panel...</p>;
 
     return (
@@ -59,10 +70,78 @@ function Dashboard() {
                     )}
                 </div>
 
+                <div className="filters-section">
+                    <div className="filters-bar">
+                        <div className="filter-group flex-2">
+                            <label htmlFor="search-input" className="filter-label">Término de búsqueda</label>
+                            <div className="input-wrapper">
+                                <span className="input-prefix" aria-hidden="true">›</span>
+                                <input
+                                    id="search-input"
+                                    type="text"
+                                    placeholder="ej. Silla rota, Salón 301, fuga..."
+                                    value={busqueda}
+                                    onChange={(e) => setBusqueda(e.target.value)}
+                                />
+                            </div>
+                        </div>
+                        <div className="filter-group flex-1">
+                            <label htmlFor="status-filter" className="filter-label">Estado del reporte</label>
+                            <select
+                                id="status-filter"
+                                value={filtroEstado}
+                                onChange={(e) => setFiltroEstado(e.target.value)}
+                            >
+                                <option value="todos">Cualquier estado</option>
+                                <option value="pendiente">Pendiente</option>
+                                <option value="en_proceso">En Proceso</option>
+                                <option value="resuelto">Resuelto</option>
+                                <option value="rechazado">Rechazado</option>
+                            </select>
+                        </div>
+                        {(busqueda !== '' || filtroEstado !== 'todos') && (
+                            <button
+                                type="button"
+                                className="btn-clear"
+                                onClick={() => {
+                                    setBusqueda('');
+                                    setFiltroEstado('todos');
+                                }}
+                                aria-label="Limpiar todos los filtros"
+                            >
+                                Limpiar
+                            </button>
+                        )}
+                    </div>
+                </div>
+
                 {mostrarForm && <ReportForm onReportCreated={getUsuarioYDatos} onClose={() => setMostrarForm(false)} />}
 
                 <div className="report-grid">
-                    {reportes.map(rep => (
+                    {reportesFiltrados.length === 0 && (
+                        <div className="empty-state" style={{ gridColumn: '1 / -1' }}>
+                            <p className="empty-message">
+                                {reportes.length === 0
+                                    ? (perfil?.rol === 'usuario'
+                                        ? "No has enviado ningún reporte de incidencia todavía. Usa el botón '+ Nuevo Reporte' de arriba para comenzar."
+                                        : "No hay reportes de incidencias en el sistema en este momento.")
+                                    : "No se encontraron reportes que coincidan con la búsqueda o el estado seleccionado."}
+                            </p>
+                            {(busqueda !== '' || filtroEstado !== 'todos') && (
+                                <button
+                                    type="button"
+                                    className="btn-clear-empty"
+                                    onClick={() => {
+                                        setBusqueda('');
+                                        setFiltroEstado('todos');
+                                    }}
+                                >
+                                    Restablecer filtros
+                                </button>
+                            )}
+                        </div>
+                    )}
+                    {reportesFiltrados.map(rep => (
                         <div
                             key={rep.id_reporte}
                             className={`card status-${rep.estado} clickable-card`}
